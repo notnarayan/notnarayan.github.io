@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)file:///Users/shankar/Documents/bootsrap%20app/index.html# -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DDX</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/tabletop.js"></script>    
+    
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  <script type="text/javascript">
+  window.onload = function() { init() };
+
+      var public_spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1JJQNxd_hsmRGPAme8BsEY-Ij0jB3VOnMiATBqA-ROCg/pubhtml';
+
+   function init() {
+    Tabletop.init( { key: public_spreadsheet_url,
+                     callback: feedPatient,
+                     simpleSheet: true } )
+  }      
+
+    function feedPatient(data){
+      x = data;
+      var pid_url = location.search.split('=')[1];
+      for(i=0;i<data.length;i++)
+    {
+      if( data[i].pid == pid_url)
+      {
+        //console.log(data[i].pname);
+        var string_diagnosis ="";
+        var string_investigations ="";
+        var string_treatment ="";
+        var string_medication ="";
+                       //how to take this to another page and create a form there. 
+        var patient_index_card="";
+        patient_index_card += "<div class='panel panel-default doctor_color_"+data[i].status+"'>"+
+                   "<div class='panel-body'>"+
+                      "<div class='row'>"+
+                        "<div><span class='patient_name'>"+data[i].pname+"</span><span class='room_no'>"+data[i].pid+"</span></div>"+
+                        "<div><span class='condition'>"+data[i].medhistory+"</span><span class='doctor_name label label-default'>"+data[i].doc+"</span></div>"+
+                      "</div>"+
+                    "</div>"+
+      "</div>";
+
+      string_diagnosis += "<div class='panel panel-default'>"+
+                   "<div class='panel-body'>"+
+                      "<div class='row'>"+
+                        "<p class='small_header'>diagnosis</p><div><span class='patient_data'>"+data[i].diagnosis+"</div>"+
+                      "</div>"+
+                    "</div>"+
+      "</div>";
+
+        string_investigations += "<div class='panel panel-default'>"+
+                   "<div class='panel-body'>"+
+                      "<div class='row'>"+
+                        "<p class='small_header'>investigations</p><div><span class='patient_data'>"+data[i].invest+"</div>"+
+                      "</div>"+
+                    "</div>"+
+      "</div>";
+
+      string_treatment += "<div class='panel panel-default'>"+
+                   "<div class='panel-body'>"+
+                      "<div class='row'>"+
+                        "<p class='small_header'>treatment</p><div><span class='patient_data'>"+data[i].treatment+"</div>"+
+                      "</div>"+
+                    "</div>"+
+      "</div>";
+      
+
+      string_medication += "<div class='panel panel-default'>"+
+                   "<div class='panel-body'>"+
+                      "<div class='row'>"+
+                        "<p class='small_header'>medication</p><div><span class='patient_data'>"+data[i].medication+"</div>"+
+                      "</div>"+
+                    "</div>";
+                  
+
+      //replace with an .html template.
+      document.getElementById('patient_medical_history').innerHTML = patient_index_card;
+      document.getElementById('patient_diagnosis').innerHTML = string_diagnosis;
+      document.getElementById('patient_investigations').innerHTML = string_investigations;
+      document.getElementById('patient_treatment').innerHTML = string_treatment;
+      document.getElementById('patient_medication').innerHTML = string_medication;
+     }
+      }
+}
+
+function postContactToGoogle() {
+            var patient_diagnosis = $('#patient_diagnosis').val();
+            var patient_id = $('#patient_id').val();
+            var patient_urgent = $('#patient_urgent').val();
+            //var patient_unstable = $('#patient_unstable').val();
+            //var patient_stable = $('#patient_stable').val();
+
+                $.ajax({
+                    url: "https://docs.google.com/forms/d/1USoJVcVWnc4YwnPNV9P9ADJcFLXQcM0D1DpAbPFvStM/formResponse",
+                    data: { "entry.2064686654": patient_diagnosis, 
+                            "entry.1296092026": patient_id},
+                    type: "POST",
+                    dataType: "json",
+                    statusCode: {
+                        0: function () {
+                            window.location.replace("index.html");
+                        },
+                        200: function () {
+                            window.location.replace("index.html");
+                        }
+                    }
+                });
+        }
+
+
+
+  </script>
+
+  </head>
+  <body class="back_color"> 
+  	<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="">DDX </a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <!-- <ul class="nav navbar-nav"
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li>
+          </ul>
+        </li>
+      </ul> -->
+      <form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default btn_10">Submit</button>
+      </form>
+      <!-- <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Link</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul> -->
+        
+      
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+<div class="padd margin_10" id="patient_medical_history"></div>
+
+
+
+<div class="padd margin_10" id="patient_diagnosis"></div>
+<div class="margin_10"><button class="btn btn-default btn-sm" data-toggle="modal" data-target="#addDiagnosis">add</button></div>
+ <!-- addPatient -->
+<div class="modal fade" id="addDiagnosis" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Add diagnosic</h4>
+      </div>
+      <div class="modal-body">
+        <form>
+             <div class="form-group">
+              <input type="text" class="form-control" id="patient_diagnosis"></div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="postContactToGoogle()" >Save </button>
+      </div>
+    </div>
+  </div>
+ </div>
+</div>
+
+
+<div class="padd margin_10" id="patient_investigations"></div>
+<div class="margin_10"><button type="submit" class="btn btn-default btn-sm">add</button></div>
+
+<div class="padd margin_10" id="patient_treatment"></div>
+<div class="margin_10"><button type="submit" class="btn btn-default btn-sm">add</button></div>
+
+<div class="padd margin_10" id="patient_medication"></div>
+<div class="margin_10"><button type="submit" class="btn btn-default btn-sm">add</button></div>
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+</body></html>
